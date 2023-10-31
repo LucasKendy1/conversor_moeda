@@ -2,16 +2,36 @@
 
 import 'package:conversor_moeda/app/components/currency_box.dart';
 import 'package:conversor_moeda/app/controllers/home_controller.dart';
+import 'package:conversor_moeda/app/models/currency_model.dart';
 import 'package:flutter/material.dart';
 
-class HomeView extends StatelessWidget {
-  TextEditingController toText = TextEditingController();
-  TextEditingController fromText = TextEditingController();
+class HomeView extends StatefulWidget {
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
 
-  HomeController homeController;
+class _HomeViewState extends State<HomeView> {
+  TextEditingController tt = TextEditingController();
+  TextEditingController ft = TextEditingController();
+  final String buttonText = "CONVERTER";
+  late HomeController homeController;
 
-  HomeView() {
-    homeController = HomeController(toText: toText, fromText: fromText);
+  @override
+  void initState() {
+    super.initState();
+    homeController = HomeController(toText: tt, fromText: ft);
+  }
+
+  void chageToCurrencyValue(CurrencyModel? value) {
+    setState(() {
+      homeController.toCurrency = value!;
+    });
+  }
+
+  void chageFromCurrencyValue(CurrencyModel? value) {
+    setState(() {
+      homeController.fromCurrency = value!;
+    });
   }
 
   @override
@@ -19,7 +39,7 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(top: 100, left: 20, right: 20),
-        child: Column(
+        child: ListView(
           children: [
             Image.asset(
               'assets/logo.png',
@@ -30,30 +50,36 @@ class HomeView extends StatelessWidget {
               height: 120,
             ),
             CurrencyBox(
+              selectedItem: homeController.toCurrency,
               items: homeController.currencies,
-              onSelected: (model) {
-                print(model.name);
+              onChanged: (value) {
+                chageToCurrencyValue(value);
               },
-              controller: toText,
-              selectedItem: homeController.toCurrency.name,
+              controller: tt,
             ),
             SizedBox(
               height: 15,
             ),
             CurrencyBox(
+              selectedItem: homeController.fromCurrency,
               items: homeController.currencies,
-              onSelected: (model) {
-                print(model.name);
+              onChanged: (value) {
+                chageFromCurrencyValue(value);
               },
-              controller: fromText,
-              selectedItem: homeController.fromCurrency.name,
+              controller: ft,
             ),
             SizedBox(
               height: 50,
             ),
             MaterialButton(
-              onPressed: () {},
-              child: Text("CONVERTER"),
+              onPressed: () {
+                homeController.convert();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(buttonText,
+                    style: TextStyle(color: Colors.black54, fontSize: 20)),
+              ),
               color: Color(0xFF5fd4af),
             )
           ],

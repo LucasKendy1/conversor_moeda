@@ -1,30 +1,19 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_const_constructors_in_immutables, recursive_getters
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_const_constructors_in_immutables, recursive_getters, unused_local_variable, must_be_immutable, use_key_in_widget_constructors, non_constant_identifier_names, unnecessary_null_comparison
 
 import 'package:conversor_moeda/app/models/currency_model.dart';
 import 'package:flutter/material.dart';
 
-class CurrencyBox extends StatefulWidget {
+class CurrencyBox extends StatelessWidget {
   final List<CurrencyModel> items;
   final TextEditingController controller;
   final CurrencyModel selectedItem;
-  final void Function(CurrencyModel) onSelected;
-  
+  Function(CurrencyModel?)? onChanged;
 
   CurrencyBox(
-      {super.key,
+      {required this.controller,
       required this.items,
-      required this.controller,
-      required this.onSelected,
-      required this.selectedItem});
-
-  @override
-  State<CurrencyBox> createState() => _CurrencyBoxState();
-}
-
-class _CurrencyBoxState extends State<CurrencyBox> {
-  get onSelected => onSelected;
-
-  get items => items;
+      required this.selectedItem,
+      required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -34,37 +23,36 @@ class _CurrencyBoxState extends State<CurrencyBox> {
       children: [
         Expanded(
           flex: 1,
-          child:  DropdownButton<CurrencyModel>(
-            value: widget.selectedItem,
-            items: widget.items.map((CurrencyModel item) {
-              return DropdownMenuItem<CurrencyModel>(
-                value: item,
-                child: Text(item.name),
-              );
-            }).toList(),
-            onChanged: onSelected,
+          child: DropdownButton<CurrencyModel>(
+            padding: EdgeInsets.only(top: 18),
+            borderRadius: BorderRadius.circular(12),
+            isExpanded: true,
+            dropdownColor: Color(0xFFff9554),
+            iconEnabledColor: Color(0xFFff9554),
+            iconSize: 35,
+            hint: Text("Moeda: "),
+            onChanged: onChanged,
+            value: (selectedItem == null) ? items[0] : selectedItem,
+            items: items
+                .map<DropdownMenuItem<CurrencyModel>>(
+                    (option) => DropdownMenuItem<CurrencyModel>(
+                          value: option,
+                          child: Text(option.name),
+                        ))
+                .toList(),
           ),
         ),
-        // DropdownMenu<CurrencyModel>(
-        //   hintText: "Moeda",
-        //   dropdownMenuEntries: [
-        //     items.asNameMap(
-        //       (e) => DropdownMenuEntry(label: e.name, value: (e)),
-        //     ),
-        //     onSelected ,
-        //   ],
-        //   selectedTrailingIcon: onSelected,
-        // )),
         SizedBox(
           width: 40,
         ),
         Expanded(
           flex: 2,
           child: TextField(
-            controller: widget.controller,
+            controller: controller,
             decoration: InputDecoration(
-              border:
-                  OutlineInputBorder(borderSide: BorderSide(strokeAlign: 2)),
+              border: OutlineInputBorder(
+                  // borderSide: BorderSide(strokeAlign: 2),
+                  ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0xFFff9554)),
               ),

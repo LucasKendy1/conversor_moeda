@@ -11,6 +11,6 @@ void main() {
 
     homeController.convert();
 
-    expect(fromText.text, 0.36);
+    expect(fromText.text, '0.36');
   });
 }

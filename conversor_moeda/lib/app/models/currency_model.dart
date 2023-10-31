@@ -5,7 +5,6 @@ class CurrencyModel {
   final double euro;
   final double bitcoin;
 
-  List<String> convertions = ["Real","Dolar","Euro","Bitcoin"];
 
   CurrencyModel({required this.name, required this.real, required this.dolar, required this.euro, required this.bitcoin});
 
